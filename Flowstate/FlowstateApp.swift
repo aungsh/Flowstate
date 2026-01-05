@@ -9,15 +9,22 @@ import SwiftUI
 
 @main
 struct FlowstateApp: App {
-    @StateObject var controller = FocusController()
+    // Keep your controller as a StateObject to manage the overlay lifecycle
+    @StateObject private var controller = FocusController()
     
     var body: some Scene {
-        WindowGroup {
-            Text("Focus App Running...")
-                .padding()
-                .onAppear {
-                    controller.start()
-                }
+        // MenuBarExtra creates the icon in the top right of the macOS menu bar
+        MenuBarExtra("Flowstate", systemImage: "bolt.circle.fill") {
+            Button("Start Flow") {
+                controller.start()
+            }
+            
+            Divider()
+            
+            Button("Quit Flowstate") {
+                NSApplication.shared.terminate(nil)
+            }
+            .keyboardShortcut("q")
         }
     }
 }

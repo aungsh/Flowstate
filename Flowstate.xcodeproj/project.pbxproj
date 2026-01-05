@@ -10,9 +10,22 @@
 		B509CAFA2F0BD9980029E0F9 /* Flowstate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flowstate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B509CB152F0BE7F00029E0F9 /* Exceptions for "Flowstate" folder in "Flowstate" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B509CAF92F0BD9980029E0F9 /* Flowstate */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B509CAFC2F0BD9980029E0F9 /* Flowstate */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B509CB152F0BE7F00029E0F9 /* Exceptions for "Flowstate" folder in "Flowstate" target */,
+			);
 			path = Flowstate;
 			sourceTree = "<group>";
 		};
@@ -258,6 +271,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Flowstate/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -289,6 +303,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Flowstate/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
