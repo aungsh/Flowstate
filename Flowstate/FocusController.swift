@@ -7,39 +7,61 @@
 
 import Cocoa
 import Combine
+import SwiftUI
 
-class FocusController: ObservableObject {
+final class FocusController: ObservableObject {
     static let shared = FocusController()
-    
+
     @Published var isActive = false
     
-    private var overlay = OverlayPanel()
+    // Kept to prevent errors in your App UI, but they won't affect the overlay anymore
+    @Published var blurRadius: Double = 10.0
+    @Published var darknessOpacity: Double = 0.0
+
+    private var overlay: OverlayPanel
     private var lastWindowID: CGWindowID?
     private var timer: Timer?
 
-    private init() {}
+    private init() {
+        self.overlay = OverlayPanel(initialBlur: 10.0, initialDarkness: 0.0)
+    }
+
+    func updateStyles() {
+        // This now updates the 'pure' blur radius dynamically
+        overlay.updateVisuals(blur: blurRadius, darkness: 0)
+    }
 
     func start() {
         guard timer == nil else { return }
-        
         isActive = true
+        overlay.alphaValue = 0
         overlay.orderFrontRegardless()
-        
+
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.5
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            overlay.animator().alphaValue = 1
+        }
+
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             self?.updateWindowLevel()
         }
     }
-    
+
     func stop() {
+        isActive = false
         timer?.invalidate()
         timer = nil
-        isActive = false
-        lastWindowID = nil
-        
-        overlay.orderOut(nil)
-        overlay.alphaValue = 0
+
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = 0.3
+            self.overlay.animator().alphaValue = 0
+        }, completionHandler: {
+            self.overlay.orderOut(nil)
+            self.lastWindowID = nil
+        })
     }
-    
+
     private func updateWindowLevel() {
         guard let frontApp = NSWorkspace.shared.frontmostApplication,
               frontApp.bundleIdentifier != Bundle.main.bundleIdentifier else {
@@ -60,8 +82,8 @@ class FocusController: ObservableObject {
 
         if let windowNumber = activeWindow?[kCGWindowNumber as String] as? CGWindowID {
             if lastWindowID != windowNumber || overlay.alphaValue == 0 {
-                overlay.alphaValue = 1
-                self.overlay.order(.below, relativeTo: Int(windowNumber))
+                if !overlay.isVisible { overlay.alphaValue = 1 }
+                overlay.order(.below, relativeTo: Int(windowNumber))
                 lastWindowID = windowNumber
             }
         }
